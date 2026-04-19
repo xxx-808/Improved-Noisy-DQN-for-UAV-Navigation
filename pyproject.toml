@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uav-rl"
+version = "0.1.0"
+description = "UAV grid navigation with DQN variants (PyTorch)"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24",
+    "torch>=2.0",
+    "matplotlib>=3.7",
+    "gym>=0.26",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["uav_rl*"]

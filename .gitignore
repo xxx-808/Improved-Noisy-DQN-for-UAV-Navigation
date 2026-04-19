@@ -1,0 +1,20 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.idea/
+*.png
+.DS_Store
+dist/
+build/
+*.egg-info/
+
+# 本地训练/分析产物（若需纳入版本库可删去下列行）
+analysis_reports/
+csv_data/
+trained_models/
+training_data/
+training_plots/
