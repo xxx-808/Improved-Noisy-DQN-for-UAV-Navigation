@@ -8,7 +8,7 @@ from gym.spaces import Discrete, Box
 import random
 
 class UAVGridWorldEnvironment(Env):
-    """栅格世界中的 UAV 导航环境（障碍物、弱信号区与局部观测）。"""
+    """English documentation."""
 
     def __init__(self, grid_size=15, max_steps=40, difficulty='medium', use_local_map=True, local_map_size=5):
         super(UAVGridWorldEnvironment, self).__init__()
@@ -29,7 +29,7 @@ class UAVGridWorldEnvironment(Env):
         
         self.target_pos = [14, 14]
         
-        # 生成障碍物和低信号区域
+        # English comment.
         self.obstacles = self._generate_obstacles()
         self.low_signal_areas = self._calculate_low_signal_areas()
         
@@ -37,7 +37,7 @@ class UAVGridWorldEnvironment(Env):
         self.visible_range = grid_size
         self.steps_taken = 0
         
-        # 动作空间: 0=上, 1=右, 2=下, 3=左, 4=停留
+        # English comment.
         self.action_space = Discrete(5)
         
         if self.use_local_map:
@@ -75,7 +75,7 @@ class UAVGridWorldEnvironment(Env):
         self.total_episodes = total_episodes
 
     def _generate_obstacles(self):
-        """生成多通道障碍物布局。"""
+        """English documentation."""
         obstacles = []
         for x in [2, 3, 5]:
             for y in range(2, 13):
@@ -145,7 +145,7 @@ class UAVGridWorldEnvironment(Env):
         return unique_areas
     
     def _get_local_signal_map(self):
-        """返回局部栅格特征向量（展平），取值约 0–1。"""
+        """English documentation."""
         local_map = np.zeros((self.local_map_size, self.local_map_size), dtype=np.float32)
         
         center = self.local_map_size // 2
@@ -275,7 +275,7 @@ class UAVGridWorldEnvironment(Env):
         return path_discovery_score
     
     def _get_closest_distance_to_target(self):
-        """获取轨迹中与目标最近的距离"""
+        """English documentation."""
         min_distance = float('inf')
         for pos in self.trajectory:
             distance = np.sqrt((pos[0] - self.target_pos[0])**2 + 
@@ -284,52 +284,52 @@ class UAVGridWorldEnvironment(Env):
         return min_distance
 
     def _get_progressive_success_reward(self):
-        """计算渐进式成功奖励，基于效率和训练进度"""
-        # 基础奖励部分 - 随训练进度逐渐增加
+        """English documentation."""
+        # English comment.
         base_reward = 50.0
         
-        # 效率奖励 - 步数越少奖励越高
+        # English comment.
         efficiency_factor = 1.0 - (self.steps_taken / self.max_steps)
         efficiency_bonus = 50.0 * efficiency_factor
         
-        # 训练进度因子 - 随着训练进行逐渐增加奖励
+        # English comment.
         progress_factor = self._get_training_progress_factor()
         progress_bonus = 50.0 * progress_factor
         
-        # 成功率调整 - 当成功率高时降低奖励，当成功率低时增加奖励
+        # English comment.
         success_rate = self._get_current_success_rate()
-        success_rate_factor = 1.0 - success_rate  # 成功率低时提高奖励
+        success_rate_factor = 1.0 - success_rate  # English comment.
         success_rate_bonus = 20.0 * success_rate_factor
         
-        # 路径独特性奖励 - 奖励新发现的路径
+        # English comment.
         path_uniqueness = self._evaluate_path_discovery()
         path_bonus = 30.0 * path_uniqueness
         
-        # 总成功奖励
+        # English comment.
         total_success_reward = base_reward + efficiency_bonus + progress_bonus + success_rate_bonus + path_bonus
         
         return total_success_reward
     
     def _get_training_progress_factor(self):
-        """获取训练进度因子，范围从0.5到1.0"""
+        """English documentation."""
         if self.total_episodes <= 1:
-            return 0.75  # 默认中间值
+            return 0.75  # English comment.
         
-        # 将进度归一化到0.5-1.0范围
+        # English comment.
         progress = min(1.0, self.episode_count / self.total_episodes)
         return 0.5 + (0.5 * progress)
     
     def _get_current_success_rate(self):
-        """计算当前成功率"""
+        """English documentation."""
         if not self.success_history:
             return 0.0
         return sum(self.success_history) / len(self.success_history)
     
     def _get_collision_penalty(self):
-        """获取碰撞惩罚，随训练进度增加"""
+        """English documentation."""
         base_penalty = 10.0
         progress_factor = self._get_training_progress_factor()
-        return base_penalty + (progress_factor * 10.0)  # 10-20之间动态调整
+        return base_penalty + (progress_factor * 10.0)  # English comment.
     
     def _is_collision(self, pos):
         """Check if position is on an obstacle"""

@@ -1,54 +1,55 @@
-﻿# UAV 栅格导航 · 深度强化学习
+﻿# UAV Grid Navigation with Deep Reinforcement Learning
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-≥2.0-EE4C2C?style=flat&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-%E2%89%A52.0-EE4C2C?style=flat&logo=pytorch&logoColor=white)](https://pytorch.org/)
 
-基于 **OpenAI Gym** 接口的二维栅格环境：无人机从起点导航至目标，避开障碍并穿越弱信号区域。仓库提供 **改进型 Noisy DQN（主模型）** 与 **标准 DQN 基线**，便于对比实验。
+This project provides a 2D grid-world UAV navigation setup with a Gym-style interface. The repository keeps two model implementations: an improved Noisy DQN as the main model and a standard DQN as a baseline for comparison.
 
 ---
 
-## 功能概览
+## Highlights
 
-| | |
+| Component | Description |
 |--|--|
-| **环境** | `UAVGridWorldEnvironment`：局部地图 + 全局标量观测，离散 5 动作（含停留） |
-| **主模型** | [`ImprovedNoisyDQNetwork`](uav_rl/agents/improved_noisy_dqn.py) · NoisyNet + 残差 / LayerNorm 等 |
-| **基线** | [`DeepQNetworkAgent`](uav_rl/agents/dqn.py) · 经验回放，可选 Dueling / Double DQN |
+| Environment | `UAVGridWorldEnvironment`: local map + global scalar observations, 5 discrete actions including stay |
+| Main Model | [`ImprovedNoisyDQNetwork`](uav_rl/agents/improved_noisy_dqn.py): NoisyNet exploration with residual and LayerNorm-based stabilization |
+| Baseline | [`DeepQNetworkAgent`](uav_rl/agents/dqn.py): replay buffer with optional Dueling / Double DQN components |
 
 ---
 
-## 环境要求
+## Requirements
 
-- **Python** 3.9+
-- **PyTorch** 2.0+
-- **gym** 0.26+
-- 其余见 [`requirements.txt`](requirements.txt)
+- Python 3.9+
+- PyTorch 2.0+
+- gym 0.26+
+- Other dependencies are listed in [`requirements.txt`](requirements.txt)
 
 ---
 
-## 安装
+## Installation
 
 ```bash
-git clone https://github.com/<你的用户名>/<仓库名>.git
-cd <仓库名>
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
 
 python -m venv .venv
 # Windows
 .venv\Scripts\activate
-# macOS / Linux: source .venv/bin/activate
+# macOS / Linux
+# source .venv/bin/activate
 
 pip install -U pip
 pip install -r requirements.txt
 pip install -e .
 ```
 
-> `pip install -e .` 为可编辑安装，便于在项目外执行 `import uav_rl`。将 clone 地址换成你的真实仓库 URL 即可。
+`pip install -e .` is recommended for editable local development and clean `import uav_rl` behavior.
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 主模型推理
+### Inference with the main model
 
 ```python
 import torch
@@ -71,9 +72,9 @@ while not done:
     state, reward, done, info = env.step(action)
 ```
 
-### 加载检查点
+### Load a checkpoint
 
-权重需与网络结构一致（默认 `state_size=31`，`action_size=5`）：
+Make sure the checkpoint matches the architecture (default `state_size=31`, `action_size=5`):
 
 ```python
 ckpt = torch.load("path/to/checkpoint.pt", map_location="cpu")
@@ -81,30 +82,30 @@ net = ImprovedNoisyDQNetwork(state_size=31, action_size=5)
 net.load_state_dict(ckpt["q_network_state_dict"])
 ```
 
-可选：将策略导出为 TorchScript 置于 `models/`，使用 `torch.jit.load` 部署，或用 [Netron](https://github.com/lutzroeder/netron) 查看计算图。
+You can optionally export to TorchScript in `models/` and use `torch.jit.load` for deployment, or inspect the model graph in [Netron](https://github.com/lutzroeder/netron).
 
 ---
 
-## 环境说明
+## Environment Summary
 
-| 项目 | 说明 |
+| Item | Value |
 |------|------|
-| 默认观测维度 | 31（`grid_size=15`，`local_map_size=5`） |
-| 动作空间 | `Discrete(5)`：上 / 右 / 下 / 左 / 停留 |
-| 参数 | `use_local_map` 控制是否使用局部栅格特征 |
+| Default observation size | 31 (`grid_size=15`, `local_map_size=5`) |
+| Action space | `Discrete(5)`: up / right / down / left / stay |
+| Key parameter | `use_local_map` toggles local map features |
 
 ---
 
-## 目录结构
+## Repository Structure
 
-```
+```text
 .
 ├── uav_rl/
 │   ├── environment.py
 │   └── agents/
-│       ├── dqn.py                  # 基线 DQN
-│       └── improved_noisy_dqn.py   # 主模型
-├── models/                         # 可选：TorchScript 等导出
+│       ├── dqn.py                  # Baseline DQN
+│       └── improved_noisy_dqn.py   # Main model
+├── models/                         # Optional exports (e.g., TorchScript)
 ├── requirements.txt
 ├── pyproject.toml
 └── README.md
@@ -112,6 +113,6 @@ net.load_state_dict(ckpt["q_network_state_dict"])
 
 ---
 
-## 开源协议
+## License
 
-在仓库根目录添加 `LICENSE`（如 MIT、Apache-2.0）以明确条款；课程或竞赛提交请遵守主办方要求。
+Add a `LICENSE` file (for example MIT or Apache-2.0) at the repository root before publishing.

@@ -1,4 +1,4 @@
-"""基线 DQN 与改进型 Noisy DQN。"""
+"""English documentation."""
 
 from .dqn import (
     DeepQNetworkAgent,

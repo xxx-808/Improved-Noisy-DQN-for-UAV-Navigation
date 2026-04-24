@@ -1,4 +1,4 @@
-"""UAV 栅格导航与深度 Q 学习相关代码。"""
+"""English documentation."""
 
 from .environment import UAVGridWorldEnvironment
 from .agents import (
